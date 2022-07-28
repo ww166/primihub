@@ -19,7 +19,7 @@ ENV LANG C.UTF-8
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Install python 3.9
-RUN apt update && apt install -y software-properties-common  
+RUN apt update && apt install -y --reinstall software-properties-common ca-certificates 
 RUN add-apt-repository ppa:deadsnakes/ppa 
 RUN  apt update \
   && apt remove -y python3.6 \
@@ -58,9 +58,9 @@ ARG TARGET_PATH=/root/.cache/bazel/_bazel_root/f8087e59fd95af1ae29e8fcb7ff1a3dc/
 RUN  ls -l $TARGET_PATH
 
 FROM ubuntu:18.04 as runner
-
 # Install python 3.9 and GCC openmp (Depends with cryptFlow2 library)
-RUN apt update && apt install -y software-properties-common  
+RUN apt update && apt install -y --reinstall software-properties-common ca-certificates 
+
 RUN add-apt-repository ppa:deadsnakes/ppa 
 RUN  apt-get update \
   && apt-get install -y python3.9 python3.9-dev libgomp1
