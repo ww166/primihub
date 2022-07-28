@@ -19,7 +19,7 @@ ENV LANG C.UTF-8
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Install python 3.9
-RUN apt update && apt install -y software-properties-common  
+RUN apt update && apt install -y --reinstall software-properties-common ca-certificates 
 RUN add-apt-repository ppa:deadsnakes/ppa 
 RUN  apt update \
   && apt remove -y python3.6 \
@@ -54,9 +54,9 @@ RUN bash pre_docker_build.sh \
   && bazel build --config=linux :node :cli :opt_paillier_c2py_test
 
 FROM ubuntu:18.04 as runner
+# Install python 3.9 and GCC openmp (Depends with cryptFlow2 library)
+RUN apt update && apt install -y --reinstall software-properties-common ca-certificates 
 
-# Install python 3.9
-RUN apt update && apt install -y software-properties-common  
 RUN add-apt-repository ppa:deadsnakes/ppa 
 RUN  apt-get update \
   && apt-get install -y python3.9 python3.9-dev 
