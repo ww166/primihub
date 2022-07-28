@@ -1,5 +1,4 @@
-*.DS_Store
-.idea/
+
 *cbp
 *.aux
 *.bbl
@@ -18,9 +17,11 @@
 
 .vscode/
 
-
+# generated files
 /lib/
 /bin/
+data/localdb*
+data/result/
 
 */CMakeFiles/
 /CMakeFiles/
@@ -28,10 +29,12 @@
 CMakeCache.txt
 out/
 build/
+cmake-*/
 
 bazel-bin
 bazel-out
 bazel-primihub
+bazel-primihub_github
 bazel-testlogs
 
 log/
@@ -100,6 +103,15 @@ example/**/model
 example/**/exp
 output
 !test/channel/greeter_pb2*.py
+
 # python
 *.egg-info/
 *.pyc
+
+# sphinx .rst
+*.rst
+
+primihub.code-workspace
+
+# leveldb storage
+localdb/

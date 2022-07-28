@@ -19,7 +19,7 @@ ENV LANG C.UTF-8
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Install python 3.9
-RUN apt update && apt install -y --reinstall software-properties-common ca-certificates 
+RUN apt update && apt install -y software-properties-common  
 RUN add-apt-repository ppa:deadsnakes/ppa 
 RUN  apt update \
   && apt remove -y python3.6 \
@@ -50,16 +50,20 @@ WORKDIR /src
 ADD . /src
 
 # Bazel build primihub-node & primihub-cli & paillier shared library
-RUN bash pre_docker_build.sh \
+RUN bash pre_build.sh \
   && bazel build --config=linux :node :cli :opt_paillier_c2py_test
 
-FROM ubuntu:18.04 as runner
-# Install python 3.9 and GCC openmp (Depends with cryptFlow2 library)
-RUN apt update && apt install -y --reinstall software-properties-common ca-certificates 
+# check if bazel build success
+ARG TARGET_PATH=/root/.cache/bazel/_bazel_root/f8087e59fd95af1ae29e8fcb7ff1a3dc/execroot/__main__/bazel-out/k8-fastbuild/bin
+RUN  ls -l $TARGET_PATH
 
+FROM ubuntu:18.04 as runner
+
+# Install python 3.9 and GCC openmp (Depends with cryptFlow2 library)
+RUN apt update && apt install -y software-properties-common  
 RUN add-apt-repository ppa:deadsnakes/ppa 
 RUN  apt-get update \
-  && apt-get install -y python3.9 python3.9-dev 
+  && apt-get install -y python3.9 python3.9-dev libgomp1
 RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.6 1 \
     && update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.9 2
 RUN apt install -y curl python3.9-distutils && curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py \
@@ -71,6 +75,7 @@ RUN rm -rf /var/lib/apt/lists/*
 ARG TARGET_PATH=/root/.cache/bazel/_bazel_root/f8087e59fd95af1ae29e8fcb7ff1a3dc/execroot/__main__/bazel-out/k8-fastbuild/bin
 WORKDIR $TARGET_PATH
 # Copy binaries to TARGET_PATH
+  
 COPY --from=builder $TARGET_PATH ./
 # Copy test data files to /tmp/
 COPY --from=builder /src/data/ /tmp/
@@ -83,16 +88,16 @@ WORKDIR /app
 COPY --from=builder /src/config ./
 
 # Copy primihub python sources to /app and setup to system python3
-RUN mkdir primihub_python
-COPY --from=builder /src/python/ ./primihub_python/
+RUN mkdir -p src/primihub/protos
+COPY --from=builder /src/python ./python
+COPY --from=builder /src/src/primihub/protos/ ./src/primihub/protos/
 COPY --from=builder src/python/primihub/tests/data/ /tmp/
-WORKDIR /app/primihub_python
+WORKDIR /app/python
 RUN python3.9 -m pip install --upgrade pip setuptools
 RUN python3.9 -m pip install -r requirements.txt
 RUN python3.9 setup.py install
 ENV PYTHONPATH=/usr/lib/python3.9/site-packages/:$TARGET_PATH
 WORKDIR /app
-
 
 # gRPC server port
 EXPOSE 50050

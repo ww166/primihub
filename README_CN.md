@@ -32,19 +32,19 @@ $ cd primihub
    容器包括：启动点、三个节点
 
   ```bash
-  $ docker-compose up
+  $ docker-compose up -d
   ```
 
 查看运行起来的docker容器：
 
 ```bash
-$ docker ps
+$ docker-compose ps
 ```
 ```
   CONTAINER ID   IMAGE                                COMMAND                  CREATED          STATUS          PORTS                                                                         NAMES
-cf875c1280be   primihub-node:1.0.5                  "/bin/bash -c './pri…"   11 minutes ago   Up 11 minutes   0.0.0.0:12120-12121->12120-12121/tcp, 0.0.0.0:8052->50050/tcp                 node2_primihub
-6a822ff5c6f7   primihub-node:1.0.5                  "/bin/bash -c './pri…"   11 minutes ago   Up 11 minutes   0.0.0.0:10120->12120/tcp, 0.0.0.0:10121->12121/tcp, 0.0.0.0:8050->50050/tcp   node0_primihub
-11d55ce06ff0   primihub-node:1.0.5                  "/bin/bash -c './pri…"   11 minutes ago   Up 11 minutes   0.0.0.0:11120->12120/tcp, 0.0.0.0:11121->12121/tcp, 0.0.0.0:8051->50050/tcp   node1_primihub
+cf875c1280be   primihub/primihub-node:latest        "/bin/bash -c './pri…"   11 minutes ago   Up 11 minutes   0.0.0.0:12120-12121->12120-12121/tcp, 0.0.0.0:8052->50050/tcp                 node2_primihub
+6a822ff5c6f7   primihub/primihub-node:latest        "/bin/bash -c './pri…"   11 minutes ago   Up 11 minutes   0.0.0.0:10120->12120/tcp, 0.0.0.0:10121->12121/tcp, 0.0.0.0:8050->50050/tcp   node0_primihub
+11d55ce06ff0   primihub/primihub-node:latest        "/bin/bash -c './pri…"   11 minutes ago   Up 11 minutes   0.0.0.0:11120->12120/tcp, 0.0.0.0:11121->12121/tcp, 0.0.0.0:8051->50050/tcp   node1_primihub
 68befa6ab2a5   primihub/simple-bootstrap-node:1.0   "/app/simple-bootstr…"   11 minutes ago   Up 11 minutes   0.0.0.0:4001->4001/tcp                                                        simple_bootstrap_node
 
 ```                                                   
@@ -56,7 +56,7 @@ cf875c1280be   primihub-node:1.0.5                  "/bin/bash -c './pri…"   1
 
 
 ```bash
-$ docker run --network=host -it primihub/primihub-node:1.0.5 primihub-cli --server=127.0.0.1:8050
+$ docker run --network=host -it primihub/primihub-node:latest primihub-cli --server=127.0.0.1:8050
 ```
 
 > 💡 请求任务的节点
@@ -71,7 +71,7 @@ $ docker run --network=host -it primihub/primihub-node:1.0.5 primihub-cli --serv
 >  2. 使用哪些共享数据集
 >  3. 做什么样的隐私计算任务
  
-在这个例子中primihub-cli会使用默认参数向 *** node 0 *** 请求一个ABY3的三方逻辑回归测试任务，关于cli可以指定的参数请见  *** [创建任务](http://docs.primihub.com/docs/advance-usage/create-tasks) ***
+在这个例子中primihub-cli会使用默认参数向 *** node 0 *** 请求一个ABY3的三方逻辑回归测试任务，关于cli可以指定的参数请见  *** [创建任务]([http://docs.primihub.com/docs/advance-usage/create-tasks](https://docs.primihub.com/docs/category/%E5%88%9B%E5%BB%BA%E4%BB%BB%E5%8A%A1)) ***
 
 
 
