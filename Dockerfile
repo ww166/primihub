@@ -30,7 +30,7 @@ RUN apt install -y curl python3.9-distutils && curl https://bootstrap.pypa.io/ge
   && rm -f get-pip.py
 
 # install other dependencies
-RUN apt install -y gcc-8 automake ca-certificates git g++-8 libtool m4 patch pkg-config python-dev unzip make wget curl zip ninja-build libgmp-dev \
+RUN apt install -y gcc-8 automake ca-certificates git g++-8 libtool m4 patch pkg-config python-dev unzip make wget curl zip ninja-build libgmp-dev tree \
   && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 800 --slave /usr/bin/g++ g++ /usr/bin/g++-8 
 
 # install npm 
@@ -54,8 +54,8 @@ RUN bash pre_build.sh \
   && bazel build --config=linux :node :cli :opt_paillier_c2py_test
 
 # check if bazel build success
-ARG TARGET_PATH=/root/.cache/bazel/_bazel_root/f8087e59fd95af1ae29e8fcb7ff1a3dc/execroot/__main__/bazel-out/k8-fastbuild/bin
-RUN  ls -l $TARGET_PATH
+ARG TARGET_ROOT_PATH=/root/.cache/bazel/_bazel_root
+RUN  tree $TARGET_ROOT_PATH
 
 FROM ubuntu:18.04 as runner
 # Install python 3.9 and GCC openmp (Depends with cryptFlow2 library)
