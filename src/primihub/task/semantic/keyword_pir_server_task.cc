@@ -27,10 +27,12 @@
 #include "seal/util/defines.h"
 
 using namespace std;
+
 using namespace apsi;
 using namespace apsi::sender;
 using namespace apsi::oprf;
 using namespace apsi::network;
+
 using namespace seal;
 using namespace seal::util;
 
@@ -160,9 +162,9 @@ int KeywordPIRServerTask::execute() {
     atomic<bool> stop = false;
     ZMQSenderDispatcher dispatcher(sender_db, oprf_key);
     int port = 1212;
-    bool done_exit = true;
+    // bool done_exit = true;
 
-    dispatcher.run(stop, port, done_exit);
+    dispatcher.run(stop, port);
 
     return 0;
 }
